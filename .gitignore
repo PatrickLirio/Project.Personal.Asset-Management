@@ -1,0 +1,165 @@
+## ===========================
+## .NET build output
+## ===========================
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+[Pp]ublish/
+[Ll]og/
+[Ll]ogs/
+out/
+artifacts/
+x64/
+x86/
+ARM/
+ARM64/
+
+## ===========================
+## Visual Studio
+## ===========================
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.rsuser
+*.userprefs
+*.vsidx
+*.vspscc
+*.vssscc
+.builds
+*_i.c
+*_p.c
+*.ilk
+*.meta
+*.obj
+*.pdb
+*.pch
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspx
+*.sap
+*.cache
+ipch/
+*.aps
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.cachefile
+*.VC.db
+*.VC.VC.opendb
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+## ===========================
+## JetBrains Rider / ReSharper
+## ===========================
+.idea/
+*.sln.iml
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+## ===========================
+## Tests and coverage
+## ===========================
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+coverage/
+coverage*.json
+coverage*.xml
+coverage*.info
+*.coverage
+*.coveragexml
+.coverage
+TestResults/
+BenchmarkDotNet.Artifacts/
+
+## ===========================
+## NuGet
+## ===========================
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+project.lock.json
+project.fragment.lock.json
+artifacts/
+# nuget.config is intentionally NOT ignored (it is committed with the repo)
+
+## ===========================
+## Secrets and local config
+## (never commit these)
+## ===========================
+.env
+.env.*
+!.env.example
+secrets.json
+*.pfx
+*.p12
+*.key
+*.pem
+appsettings.Local.json
+appsettings.*.Local.json
+launchSettings.local.json
+
+## ===========================
+## Entity Framework
+## ===========================
+# Generated SQL scripts (migration .cs files are NOT ignored)
+*.sql.generated
+
+## ===========================
+## Docker / local infrastructure
+## ===========================
+docker-compose.override.yml
+.docker/
+*.dockerignore.bak
+
+## ===========================
+## Local databases / data volumes
+## ===========================
+*.mdf
+*.ldf
+*.ndf
+*.db
+*.sqlite
+*.sqlite3
+pgdata/
+postgres-data/
+mssql-data/
+rabbitmq-data/
+
+## ===========================
+## OS files
+## ===========================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+## ===========================
+## Misc
+## ===========================
+*.swp
+*~
+*.bak
+*.orig
+node_modules/

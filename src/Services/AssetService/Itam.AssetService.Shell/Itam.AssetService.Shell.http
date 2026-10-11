@@ -1,0 +1,6 @@
+@Itam.AssetService.Shell_HostAddress = http://localhost:5031
+
+GET {{Itam.AssetService.Shell_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

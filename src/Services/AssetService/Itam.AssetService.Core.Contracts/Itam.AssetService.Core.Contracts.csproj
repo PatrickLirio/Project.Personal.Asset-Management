@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Common\Itam.Common.Base\Itam.Common.Base.csproj" />
+		<ProjectReference Include="..\..\..\Common\Itam.Common.Messaging\Itam.Common.Messaging.csproj" />
+	</ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

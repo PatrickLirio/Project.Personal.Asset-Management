@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Common/">
+    <Project Path="src/Common/Itam.Common.Base/Itam.Common.Base.csproj" />
+    <Project Path="src/Common/Itam.Common.Messaging/Itam.Common.Messaging.csproj" />
+  </Folder>
+</Solution>
