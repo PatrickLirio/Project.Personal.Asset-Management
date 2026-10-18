@@ -2,6 +2,7 @@
   <Folder Name="/src/" />
   <Folder Name="/src/Common/">
     <Project Path="src/Common/Itam.Common.Base/Itam.Common.Base.csproj" />
+    <Project Path="src/Common/Itam.Common.Configuration/Itam.Common.Configuration.csproj" />
     <Project Path="src/Common/Itam.Common.Messaging/Itam.Common.Messaging.csproj" />
   </Folder>
   <Folder Name="/src/Services/" />
@@ -9,5 +10,6 @@
     <Project Path="src/Services/AssetService/Itam.AssetService.Core.Contracts/Itam.AssetService.Core.Contracts.csproj" />
     <Project Path="src/Services/AssetService/Itam.AssetService.Core/Itam.AssetService.Core.csproj" />
     <Project Path="src/Services/AssetService/Itam.AssetService.Infrastructure.Contracts/Itam.AssetService.Infrastructure.Contracts.csproj" />
+    <Project Path="src/Services/AssetService/Itam.AssetService.Infrastructure/Itam.AssetService.Infrastructure.csproj" />
   </Folder>
 </Solution>

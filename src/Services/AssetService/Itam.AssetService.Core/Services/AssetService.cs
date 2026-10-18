@@ -4,6 +4,8 @@ using Itam.AssetService.Core.Contracts.DTOs;
 using Itam.AssetService.Core.Contracts.Enums;
 using Itam.AssetService.Core.Contracts.Interfaces;
 using Itam.AssetService.Core.Contracts.Messages;
+using Itam.AssetService.Infrastructure.Contracts;
+using Itam.AssetService.Infrastructure.Contracts.Entities;
 using Itam.Common.Base.Common;
 using Itam.Common.Messaging.Events;
 using MassTransit;
@@ -34,7 +36,8 @@ namespace Itam.AssetService.Core.Services
             {
                 Id= Guid.NewGuid(),
                 AssetTag = request.AssetTag.Trim().ToUpperInvariant(),
-                SerialNumber = request.Category,
+                SerialNumber = request.SerialNumber.Trim(),
+                Category = request.Category,
                 Make = request.Make,
                 Model = request.Model,
                 PurchaseCost = request.PurchaseCost,
@@ -93,7 +96,7 @@ namespace Itam.AssetService.Core.Services
                 ConditionNotes = request.ConditionNotes,
                 AssignedBy = user
             };
-            await assetRepo.AddAssignementHistoryAsync(assignmentHistory);
+            await assetRepo.AddAssignmentHistoryAsync(assignmentHistory);
             await assetRepo.SaveChangesAsync();
 
             //6. Publish Integration Event to RabbitMQ
@@ -104,7 +107,7 @@ namespace Itam.AssetService.Core.Services
             ));
 
             logger.LogInformation("Asset {Tag} assigned to employee {Emp} ({Dept})", asset.AssetTag, custodian.FullName, custodian.Department);
-            return Result<AssetResponseDto>.Success<MapToDto(asset, custodian.FullName);
+            return Result<AssetResponseDto>.Success(MapToDto(asset, custodian.FullName));
         }
       
         public async Task<Result<AssetResponseDto>> ReturnAssetAsync(Guid assetId, string user)
@@ -123,7 +126,7 @@ namespace Itam.AssetService.Core.Services
 
             await assetRepo.SaveChangesAsync();
             logger.LogInformation("Asset {Tag} return to inventory by {User}", asset.AssetTag, user);
-            return Result<AssetResponseDto>.Success(MaptoDto(asset));
+            return Result<AssetResponseDto>.Success(MapToDto(asset));
         }
 
         public async Task<Result<AssetResponseDto>> GetByIdAsync (Guid id)
@@ -131,20 +134,20 @@ namespace Itam.AssetService.Core.Services
             var asset = await assetRepo.GetByIdAsync(id);
             return asset == null
                 ? Result<AssetResponseDto>.Failure("Asset not found.", "NOT_FOUND")
-                : Result<AssetResponseDto>.Success(MaptoDto(asset));
+                : Result<AssetResponseDto>.Success(MapToDto(asset));
         }
 
         public async Task<PagedResult<AssetResponseDto>> SearchAssetAsync(int pageNumber, int pageSize, string? statusFilter)
         {
             var pagedAssets = await assetRepo.GetPagedAsync(pageNumber, pageSize, statusFilter);
-            var dtos = pagedAssets.Items.Select(assetRepo => MaptoDto(a)).toList();
+            var dtos = pagedAssets.Items.Select(a => MapToDto(a)).ToList();
             
             return new PagedResult<AssetResponseDto>(dtos, pagedAssets.TotalCount, pageNumber, pageSize);
         }
     
         public async Task<AssetOperationMessage.Response>ProcessMessageAsync(AssetOperationMessage.Request req, string correlationId)
         {
-            if(req.OperationType == "ASSIGN_ASSET" && req.AssignmentPayload, "SYSTEM_MSG" != null);
+            if(req.OperationType == "ASSIGN_ASSET" && req.AssignmentPayload != null);
             {
                 var res = await AssignAssetAsync(req.AssignmentPayload, "SYSTEM_MSG");
                  return new AssetOperationMessage.Response
@@ -158,7 +161,7 @@ namespace Itam.AssetService.Core.Services
             return new AssetOperationMessage.Response {Success = false, StatusCode = "BAD_REQUEST", Message = "Unsupported operation."};
             }
             public static AssetResponseDto MapToDto(HardwareAsset a, string? custodianName = null) => new(
-                a.id, a.AssetTag, a.SerialNumber, a.Category.ToString(), a.Make, a.Model, 
+                a.Id, a.AssetTag, a.SerialNumber, a.Category.ToString(), a.Make, a.Model, 
                 a.PurchaseCost, a.Status.ToString(), a.CurrentCustodianId, custodianName, 
                 a.LastAssignedDateUtc, a.CreatedAtUtc
             );
