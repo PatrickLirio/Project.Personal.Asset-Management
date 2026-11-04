@@ -17,7 +17,7 @@ namespace Itam.AssetService.Core.Services
     /// <summary>
     /// Primary constructor in .Net10/ c#14 injects dependecies directly into the class signature!
     /// </summary>
-    internal class AssetService ( 
+    public class AssetService ( 
         IAssetRepository assetRepo,
         ICustodianRepository custodianRepo,
         IPublishEndpoint publishEndpoint,

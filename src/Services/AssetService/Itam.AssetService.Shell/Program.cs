@@ -1,41 +1,88 @@
+using Itam.AssetService.Api.Controllers;
+using Itam.AssetService.Core.Contracts.Interfaces;
+using Itam.AssetService.Core.Services;
+using Itam.AssetService.Infrastructure.Contracts;
+using Itam.AssetService.Infrastructure.Data;
+using Itam.AssetService.Infrastructure.Repositories;
+using Itam.Common.Configuration.Options;
+using MassTransit;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+var dbOptions = builder.Configuration
+    .GetSection(DatabaseOptions.SectionName)
+    .Get<DatabaseOptions>()
+    ?? throw new InvalidOperationException("Database options missing!");
+
+var rmqOptions = builder.Configuration
+    .GetSection(RabbitMqOptions.SectionName)
+    .Get<RabbitMqOptions>()
+    ?? throw new InvalidOperationException("RabbitMq options missing!");
+
+builder.Services.AddDbContext<AssetDbContext>(options =>
+    options.UseSqlServer(dbOptions.BizDb, sqlOptions =>
+        sqlOptions.CommandTimeout(dbOptions.CommandTimeoutSeconds)));
+
+builder.Services.AddScoped<IAssetRepository, AssetRepository>();
+builder.Services.AddScoped<ICustodianRepository, CustodianRepository>();
+builder.Services.AddScoped<IAssetService, AssetService>();
+
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(rmqOptions.Host, (ushort)rmqOptions.Port, rmqOptions.VirtualHost, host =>
+        {
+            host.Username(rmqOptions.Username);
+            host.Password(rmqOptions.Password);
+        });
+
+        cfg.ConfigureEndpoints(context);
+    });
+});
+
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(AssetsController).Assembly);
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new() { Title = "IT Asset Management API", Version = "v1" });
+});
+
+builder.Services.AddHealthChecks()
+    .AddCheck<DatabaseHealthCheck>("database");
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.MapHealthChecks("/health");
+app.MapControllers();
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+sealed class DatabaseHealthCheck(AssetDbContext db) : IHealthCheck
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    public async Task<HealthCheckResult> CheckHealthAsync(
+        HealthCheckContext context,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            return await db.Database.CanConnectAsync(cancellationToken)
+                ? HealthCheckResult.Healthy("Database is reachable.")
+                : HealthCheckResult.Unhealthy("Database is unreachable.");
+        }
+        catch (Exception exception)
+        {
+            return HealthCheckResult.Unhealthy("Database is unreachable.", exception);
+        }
+    }
 }
