@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Itam.AssetService.Core.Contracts\Itam.AssetService.Core.Contracts.csproj" />
-    <ProjectReference Include="..\Itam.AssetService.Infrastructure.Contracts\Itam.AssetService.Infrastructure.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Common\Itam.Common.Base\Itam.Common.Base.csproj" />
     <ProjectReference Include="..\..\..\Common\Itam.Common.Messaging\Itam.Common.Messaging.csproj" />
   </ItemGroup>

@@ -1,7 +1,7 @@
 
-using Itam.AssetService.Core.Contracts.Enums;
-using Itam.AssetService.Infrastructure.Contracts;
-using Itam.AssetService.Infrastructure.Contracts.Entities;
+
+using Itam.AssetService.Application.Repositories;
+using Itam.AssetService.Core.Entities;
 using Itam.AssetService.Infrastructure.Data;
 using Itam.Common.Base.Common;
 using Microsoft.EntityFrameworkCore;

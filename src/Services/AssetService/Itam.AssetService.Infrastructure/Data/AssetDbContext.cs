@@ -1,23 +1,29 @@
 
-using Itam.AssetService.Infrastructure.Contracts.Entities;
+
+using Itam.AssetService.Application.Identity;
+using Itam.AssetService.Core.Entities;
 using Itam.Common.Base.Entities;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace Itam.AssetService.Infrastructure.Data
 {
-    public class AssetDbContext(DbContextOptions<AssetDbContext> options) : DbContext(options)
+    public sealed class AssetDbContext(DbContextOptions<AssetDbContext> options,ICurrentUser currentUser) : IdentityDbContext<AssetUser, AssetRole, Guid>(options)
     {
         public DbSet<HardwareAsset> HardwareAssets => Set<HardwareAsset>();
         public DbSet<Custodian> Custodians => Set<Custodian>();
         public DbSet<AssetAssignment> AssetAssignments => Set<AssetAssignment>();
+        public DbSet<AssetRequest> AssetRequests => Set<AssetRequest>();
+        public DbSet<AssetIssueReport> AssetIssueReports => Set<AssetIssueReport>();
+        public DbSet<AssetRepair> AssetRepairs => Set<AssetRepair>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);// Required for Identity mappings.
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AssetDbContext).Assembly);
         }
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public override Task<int> SaveChangesAsync(CancellationToken ct = default)
         {
             //Automatically timestamp and audit all modified entities!
             foreach (var entry in ChangeTracker.Entries<AuditableEntity<Guid>>())

@@ -1,17 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Itam.AssetService.Infrastructure.Contracts\Itam.AssetService.Infrastructure.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Common\Itam.Common.Base\Itam.Common.Base.csproj" />
     <ProjectReference Include="..\..\..\Common\Itam.Common.Configuration\Itam.Common.Configuration.csproj" />
+    <ProjectReference Include="..\..\..\Common\Itam.Common.Messaging\Itam.Common.Messaging.csproj" />
+    <ProjectReference Include="..\Itam.AssetService.Application\Itam.AssetService.Application.csproj" />
+    <ProjectReference Include="..\Itam.AssetService.Core\Itam.AssetService.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.12">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer"  />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" >
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="System.Security.Cryptography.Pkcs" />
   </ItemGroup>
 
   <PropertyGroup>

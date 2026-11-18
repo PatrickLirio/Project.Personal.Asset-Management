@@ -7,9 +7,10 @@
   </Folder>
   <Folder Name="/src/Services/" />
   <Folder Name="/src/Services/AssetService/">
-    <Project Path="src/Services/AssetService/Itam.AssetService.Core.Contracts/Itam.AssetService.Core.Contracts.csproj" />
+    <Project Path="src/Services/AssetService/Itam.AssetService.Api/Itam.AssetService.Api.csproj" />
+    <Project Path="src/Services/AssetService/Itam.AssetService.Application/Itam.AssetService.Application.csproj" />
     <Project Path="src/Services/AssetService/Itam.AssetService.Core/Itam.AssetService.Core.csproj" />
-    <Project Path="src/Services/AssetService/Itam.AssetService.Infrastructure.Contracts/Itam.AssetService.Infrastructure.Contracts.csproj" />
     <Project Path="src/Services/AssetService/Itam.AssetService.Infrastructure/Itam.AssetService.Infrastructure.csproj" />
+    <Project Path="src/Services/AssetService/Itam.AssetService.Shell/Itam.AssetService.Shell.csproj" />
   </Folder>
 </Solution>

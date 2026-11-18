@@ -1,9 +1,12 @@
 using Itam.AssetService.Api.Controllers;
-using Itam.AssetService.Core.Contracts.Interfaces;
-using Itam.AssetService.Core.Services;
-using Itam.AssetService.Infrastructure.Contracts;
+using Itam.AssetService.Application.Events;
+using Itam.AssetService.Application.Identity;
+using Itam.AssetService.Application.Repositories;
+using Itam.AssetService.Application.Services;
 using Itam.AssetService.Infrastructure.Data;
+using Itam.AssetService.Infrastructure.Messaging;
 using Itam.AssetService.Infrastructure.Repositories;
+using Itam.AssetService.Shell.Identity;
 using Itam.Common.Configuration.Options;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
@@ -25,9 +28,15 @@ builder.Services.AddDbContext<AssetDbContext>(options =>
     options.UseSqlServer(dbOptions.BizDb, sqlOptions =>
         sqlOptions.CommandTimeout(dbOptions.CommandTimeoutSeconds)));
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUser, HttpCurrentUser>();
+
 builder.Services.AddScoped<IAssetRepository, AssetRepository>();
 builder.Services.AddScoped<ICustodianRepository, CustodianRepository>();
 builder.Services.AddScoped<IAssetService, AssetService>();
+builder.Services.AddScoped<IAssetEventPublisher, MassTransitAssetEventPublisher>();
+
+
 
 builder.Services.AddMassTransit(x =>
 {
