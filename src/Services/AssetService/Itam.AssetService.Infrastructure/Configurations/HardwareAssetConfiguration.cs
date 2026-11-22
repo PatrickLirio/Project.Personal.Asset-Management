@@ -1,6 +1,6 @@
 
 
-using Itam.AssetService.Infrastructure.Contracts.Entities;
+using Itam.AssetService.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -25,6 +25,8 @@ namespace Itam.AssetService.Infrastructure.Configurations
             builder.Property(a => a.Make).IsRequired().HasMaxLength(100);
             builder.Property(a => a.Model).IsRequired().HasMaxLength(100);
             builder.Property(a => a.PurchaseCost).HasPrecision(18,2);
+
+            builder.Property(a => a.RowVersion).IsRowVersion();
 
             //Soft-delete query filter: Automatically excldes deleted assets from all queries
             builder.HasQueryFilter(a => !a.IsDeleted);

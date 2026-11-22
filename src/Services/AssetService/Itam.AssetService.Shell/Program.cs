@@ -31,8 +31,8 @@ builder.Services.AddDbContext<AssetDbContext>(options =>
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, HttpCurrentUser>();
 
-builder.Services.AddScoped<IAssetRepository, AssetRepository>();
-builder.Services.AddScoped<ICustodianRepository, CustodianRepository>();
+// builder.Services.AddScoped<IAssetRepository, AssetRepository>();
+// builder.Services.AddScoped<ICustodianRepository, CustodianRepository>();
 builder.Services.AddScoped<IAssetService, AssetService>();
 builder.Services.AddScoped<IAssetEventPublisher, MassTransitAssetEventPublisher>();
 

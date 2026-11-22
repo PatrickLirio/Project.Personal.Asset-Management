@@ -2,13 +2,18 @@
 
 using Itam.AssetService.Application.Identity;
 using Itam.AssetService.Core.Entities;
+using Itam.AssetService.Infrastructure.Identity;
 using Itam.Common.Base.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 
 namespace Itam.AssetService.Infrastructure.Data
 {
-    public sealed class AssetDbContext(DbContextOptions<AssetDbContext> options,ICurrentUser currentUser) : IdentityDbContext<AssetUser, AssetRole, Guid>(options)
+    public sealed class AssetDbContext(
+        DbContextOptions<AssetDbContext> options,
+        ICurrentUser currentUser)
+        : IdentityDbContext<AssetUser, AssetRole, Guid>(options)
     {
         public DbSet<HardwareAsset> HardwareAssets => Set<HardwareAsset>();
         public DbSet<Custodian> Custodians => Set<Custodian>();
@@ -19,7 +24,7 @@ namespace Itam.AssetService.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);// Required for Identity mappings.
+            base.OnModelCreating(modelBuilder); // Required for Identity mappings.
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AssetDbContext).Assembly);
         }
 
@@ -31,13 +36,15 @@ namespace Itam.AssetService.Infrastructure.Data
                 if(entry.State == EntityState.Added)
                 {
                     entry.Entity.CreatedAtUtc = DateTime.UtcNow;
+                        entry.Entity.CreatedBy = currentUser.UserId?.ToString() ?? "SYSTEM";
                 }
                 else if (entry.State == EntityState.Modified)
                 {
                     entry.Entity.LastModifiedAtUtc = DateTime.UtcNow;
+                        entry.Entity.LastModifiedBy = currentUser.UserId?.ToString() ?? "SYSTEM";
                 }
             }
-            return base.SaveChangesAsync(cancellationToken);
+            return base.SaveChangesAsync(ct);
         }
 
 
